@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <title>Music Therapy System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #00146c 0%, #140027 100%);
+            min-height: 100vh;
+            color: #000000;
+            font-family: 'Roboto', sans-serif;
+        }
+        .fade-in {
+          animation: fadeIn 1.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
+
+        .slide-up {
+          animation: slideUp 1.5s ease-out;
+        }
+
+        @keyframes slideUp {
+          from { transform: translateY(50px); opacity: 0; }
+          to { transform: translateY(0); opacity: 1; }
+        }
+
+        .animate-float {
+          animation: float 4s ease-in-out infinite;
+        }
+
+        @keyframes float {
+          0%, 100% { transform: translateY(0); }
+          50% { transform: translateY(-15px); }
+        }
+
+        .animate-pulse {
+          animation: pulse 2.5s infinite;
+        }
+
+        @keyframes pulse {
+          0% { transform: scale(1); }
+          50% { transform: scale(1.05); }
+          100% { transform: scale(1); }
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            color: white;
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .main-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .audio-controls {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .control-section {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .control-section:hover {
+            border-color: #667eea;
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+
+        .control-section h3 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 1.3rem;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 10px;
+            min-width: 150px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+
+        .btn-warning {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+
+        .file-input-wrapper {
+            position: relative;
+            display: inline-block;
+            margin: 10px 0;
+        }
+
+        .file-input {
+            position: absolute;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+
+        .file-label {
+            display: inline-block;
+            padding: 15px 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            min-width: 150px;
+            text-align: center;
+        }
+
+        .file-label:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .status {
+            margin: 20px 0;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .status.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .status.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .status.info {
+            background: #cce7ff;
+            color: #004085;
+            border: 1px solid #b3d7ff;
+        }
+
+        .recording-indicator {
+            display: none;
+            align-items: center;
+            justify-content: center;
+            margin: 20px 0;
+            color: #dc3545;
+            font-weight: 600;
+        }
+
+        .recording-indicator.active {
+            display: flex;
+        }
+
+        .pulse {
+            width: 12px;
+            height: 12px;
+            background: #dc3545;
+            border-radius: 50%;
+            margin-right: 10px;
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.3; }
+            100% { opacity: 1; }
+        }
+
+        .emotion-result {
+            display: none;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            margin: 30px 0;
+        }
+
+        .emotion-result.show {
+            display: block;
+            animation: slideIn 0.5s ease;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .emotion-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+        }
+
+        .therapy-options {
+            display: none;
+            margin: 30px 0;
+        }
+
+        .therapy-options.show {
+            display: block;
+            animation: slideIn 0.5s ease;
+        }
+
+        .therapy-choice {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 15px;
+            margin: 15px 0;
+            border: 2px solid transparent;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .therapy-choice:hover {
+            border-color: #667eea;
+            background: #e3f2fd;
+        }
+
+        .music-player {
+            display: none;
+            background: #1a1a1a;
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin: 30px 0;
+        }
+
+        .music-player.show {
+            display: block;
+            animation: slideIn 0.5s ease;
+        }
+
+        .playlist {
+            margin-top: 20px;
+        }
+
+        .song-item {
+            background: rgba(255,255,255,0.1);
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 10px;
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .song-item:hover {
+            background: rgba(255,255,255,0.2);
+        }
+
+        .song-info {
+            flex: 1;
+        }
+
+        .song-title {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .song-artist {
+            opacity: 0.8;
+            font-size: 0.9rem;
+        }
+
+        .play-btn {
+            background: #1db954;
+            border: none;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .predict-section {
+            text-align: center;
+            margin: 40px 0;
+            padding: 30px;
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+            border-radius: 15px;
+        }
+
+        .predict-section h3 {
+            color: #8b4513;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .audio-preview {
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .audio-preview audio {
+            width: 100%;
+            max-width: 400px;
+            margin: 10px 0;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .main-card {
+                padding: 20px;
+            }
+            
+            .audio-controls {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+        }
+        .spotify-button {
+    margin-top: 20px;
+    padding: 12px 24px;
+    font-size: 16px;
+    border: none;
+    border-radius: 25px;
+    background-color: #1DB954;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+.spotify-button:hover {
+    background-color: #1ed760;
+}
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Music Therapy System</h1>
+            <p>We will predict your emotion and suggest personalized music therapy.</p>
+        </div>
+
+        <div class="main-card">
+            <!-- Audio Input Controls -->
+            <div class="audio-controls">
+                <div class="control-section">
+                    <h3>📁 Upload Audio File</h3>
+                    <div class="file-input-wrapper">
+                        <input type="file" id="audioFile" class="file-input" accept="audio/*">
+                        <label for="audioFile" class="file-label">Choose Audio File</label>
+                    </div>
+                    <div id="fileStatus" class="status hidden"></div>
+                </div>
+
+                <div class="control-section">
+                    <h3>🎤 Record Audio</h3>
+                    <button id="startRecord" class="btn">Start Recording</button>
+                    <button id="stopRecord" class="btn btn-secondary" disabled>Stop Recording</button>
+                    <div id="recordingIndicator" class="recording-indicator">
+                        <div class="pulse"></div>
+                        <span>Recording...</span>
+                    </div>
+                    <div id="recordStatus" class="status hidden"></div>
+                </div>
+            </div>
+
+            <!-- Audio Preview -->
+            <div id="audioPreview" class="audio-preview hidden">
+                <h3>Audio Preview</h3>
+                <audio id="audioPlayer" controls></audio>
+            </div>
+
+            <!-- Predict Emotion Section -->
+            <div class="predict-section">
+                <h3>🧠 Emotion Analysis</h3>
+                <p>Upload or record audio, then click predict to analyze your emotional state</p>
+                <button id="predictBtn" class="btn btn-success" disabled>Predict Emotion</button>
+                <div id="predictStatus" class="status hidden"></div>
+            </div>
+
+            <!-- Emotion Result -->
+            <div id="emotionResult" class="emotion-result">
+                <div id="emotionIcon" class="emotion-icon">😊</div>
+                <h2 id="emotionText">Detected Emotion: Happy</h2>
+                <p id="emotionDescription">Your voice indicates a positive and joyful emotional state.</p>
+            </div>
+
+            <!-- Therapy Options -->
+            <div id="therapyOptions" class="therapy-options">
+                <h3 style="text-align: center; margin-bottom: 25px; color: #001b91;">Choose Your Therapy Approach</h3>
+                
+                <div class="therapy-choice" data-choice="continue">
+                    <h4 style="color: #0020ae; margin-bottom: 10px;">🎭 Continue with Current Emotion</h4>
+                    <p>Listen to music that matches and amplifies your current emotional state</p>
+                </div>
+
+                <div class="therapy-choice" data-choice="calm">
+                    <h4 style="color: #667eea; margin-bottom: 10px;">🧘 Find Inner Peace</h4>
+                    <p>Listen to calming music to help you relax and find emotional balance</p>
+                </div>
+
+                <div class="therapy-choice" data-choice="exit">
+                    <h4 style="color: #667eea; margin-bottom: 10px;">🚪 Exit Session</h4>
+                    <p>End the therapy session and return to the main menu</p>
+                </div>
+            </div>
+
+            <!-- Music Player -->
+            <div id="musicPlayer" class="music-player">
+                <h3 id="playlistTitle">🎵 Your Therapeutic Playlist</h3>
+                <p id="playlistDescription">Curated music for your emotional wellness</p>
+                <div id="playlist" class="playlist"></div>
+            </div>
+        </div>
+    </div>
+    <script>
+        // Global variables
+        let mediaRecorder;
+        let audioChunks = [];
+        let currentAudioBlob = null;
+        let currentEmotion = null;
+
+        // Emotion data with music recommendations
+const emotionData = {
+    happy: {
+        icon: '😊',
+        description: 'Your voice indicates a positive and joyful emotional state.',
+        playlistUrl: 'https://open.spotify.com/playlist/37i9dQZF1DXdPec7aLTmlC'  // Happy Hits!
+    },
+    angry: {
+        icon: '😠',
+        description: 'Your voice shows signs of frustration or anger. Let this music help you unwind.',
+        playlistUrl: 'https://open.spotify.com/playlist/37i9dQZF1DWYxwmBaMqxsl'  // Rock Hard
+    },
+    sad: {
+        icon: '😢',
+        description: 'Your voice suggests sadness. Let these songs comfort you.',
+        playlistUrl: 'https://open.spotify.com/playlist/37i9dQZF1DX7qK8ma5wgG1'  // Life Sucks
+    },
+    calm: {
+        icon: '😌',
+        description: 'You sound relaxed and peaceful. Enjoy more tranquility.',
+        playlistUrl: 'https://open.spotify.com/playlist/37i9dQZF1DWU0ScTcjJBdj'  // Peaceful Piano
+    }
+};
+
+
+
+        // DOM elements
+        const audioFileInput = document.getElementById('audioFile');
+        const startRecordBtn = document.getElementById('startRecord');
+        const stopRecordBtn = document.getElementById('stopRecord');
+        const predictBtn = document.getElementById('predictBtn');
+        const recordingIndicator = document.getElementById('recordingIndicator');
+        const audioPreview = document.getElementById('audioPreview');
+        const audioPlayer = document.getElementById('audioPlayer');
+        const emotionResult = document.getElementById('emotionResult');
+        const therapyOptions = document.getElementById('therapyOptions');
+        const musicPlayer = document.getElementById('musicPlayer');
+
+        // File upload handler
+        audioFileInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                currentAudioBlob = file;
+                displayAudioPreview(file);
+                showStatus('fileStatus', `File uploaded: ${file.name}`, 'success');
+                predictBtn.disabled = false;
+            }
+        });
+
+        // Recording functionality
+        startRecordBtn.addEventListener('click', startRecording);
+        stopRecordBtn.addEventListener('click', stopRecording);
+        predictBtn.addEventListener('click', predictEmotion);
+
+        // Get user media for recording
+        async function startRecording() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                
+                mediaRecorder = new MediaRecorder(stream);
+                audioChunks = [];
+
+                mediaRecorder.ondataavailable = function(event) {
+                    audioChunks.push(event.data);
+                };
+
+                mediaRecorder.onstop = function() {
+                    const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+                    currentAudioBlob = audioBlob;
+                    displayAudioPreview(audioBlob);
+                    showStatus('recordStatus', 'Recording completed successfully!', 'success');
+                    predictBtn.disabled = false;
+                    
+                    // Stop all tracks to release microphone
+                    stream.getTracks().forEach(track => track.stop());
+                };
+
+                mediaRecorder.start();
+                
+                startRecordBtn.disabled = true;
+                stopRecordBtn.disabled = false;
+                recordingIndicator.classList.add('active');
+                showStatus('recordStatus', 'Recording in progress...', 'info');
+
+            } catch (error) {
+                console.error('Error accessing microphone:', error);
+                showStatus('recordStatus', 'Error: Could not access microphone', 'error');
+            }
+        }
+
+        function stopRecording() {
+            if (mediaRecorder && mediaRecorder.state === 'recording') {
+                mediaRecorder.stop();
+                
+                startRecordBtn.disabled = false;
+                stopRecordBtn.disabled = true;
+                recordingIndicator.classList.remove('active');
+            }
+        }
+
+        function displayAudioPreview(audioBlob) {
+            const audioURL = URL.createObjectURL(audioBlob);
+            audioPlayer.src = audioURL;
+            audioPreview.classList.remove('hidden');
+        }
+
+        function showStatus(elementId, message, type) {
+            const statusElement = document.getElementById(elementId);
+            statusElement.textContent = message;
+            statusElement.className = `status ${type}`;
+            statusElement.classList.remove('hidden');
+        }
+
+        // Emotion prediction (simulated ML model)
+        async function predictEmotion() {
+            if (!currentAudioBlob) {
+                showStatus('predictStatus', 'Please upload or record audio first', 'error');
+                return;
+            }
+
+            showStatus('predictStatus', 'Analyzing your voice for emotional patterns...', 'info');
+            predictBtn.disabled = true;
+
+            // Simulate ML processing time
+            await new Promise(resolve => setTimeout(resolve, 2000));
+
+            // Simulate emotion prediction (random for demo)
+            const emotions = ['happy', 'sad', 'angry', 'calm'];
+            currentEmotion = emotions[Math.floor(Math.random() * emotions.length)];
+
+            displayEmotionResult(currentEmotion);
+            showStatus('predictStatus', 'Emotion analysis completed!', 'success');
+            predictBtn.disabled = false;
+        }
+
+        function displayEmotionResult(emotion) {
+            const data = emotionData[emotion];
+
+            document.getElementById('emotionIcon').textContent = data.icon;
+            document.getElementById('emotionText').textContent = `Detected Emotion: ${emotion.charAt(0).toUpperCase() + emotion.slice(1)}`;
+            document.getElementById('emotionDescription').textContent = data.description;
+
+            emotionResult.classList.add('show');
+            therapyOptions.classList.add('show');
+
+            // Scroll to result section
+            emotionResult.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Therapy choice handlers
+        document.querySelectorAll('.therapy-choice').forEach(choice => {
+            choice.addEventListener('click', function() {
+                const choiceType = this.dataset.choice;
+                handleTherapyChoice(choiceType);
+            });
+        });
+
+        function handleTherapyChoice(choice) {
+            if (choice === 'exit') {
+                resetSystem();
+                return;
+            }
+
+            const musicType = choice === 'calm' ? 'calmMusic' : 'music';
+            const playlist = emotionData[currentEmotion][musicType];
+            
+            displayMusicPlayer(playlist, choice);
+        }
+
+function displayMusicPlayer(_, therapyType) {
+    const titleMap = {
+        'calm': '🧘 Calming Music for Inner Peace',
+        'continue': `🎭 Music for Your ${currentEmotion.charAt(0).toUpperCase() + currentEmotion.slice(1)} Mood`
+    };
+
+    const descriptionMap = {
+        'calm': 'Carefully selected tracks to help you find balance and tranquility',
+        'continue': `Music that resonates with and validates your current emotional state`
+    };
+
+    document.getElementById('playlistTitle').textContent = titleMap[therapyType];
+    document.getElementById('playlistDescription').textContent = descriptionMap[therapyType];
+
+    const playlistContainer = document.getElementById('playlist');
+    playlistContainer.innerHTML = '';
+
+    const playlistUrl = emotionData[currentEmotion]?.playlistUrl;
+
+    if (playlistUrl) {
+        // Create a button that opens Spotify
+        const button = document.createElement('button');
+        button.textContent = '🎧 Open Spotify Playlist';
+        button.className = 'spotify-button';
+        button.onclick = () => window.open(playlistUrl, '_blank');
+        playlistContainer.appendChild(button);
+    } else {
+        playlistContainer.textContent = 'No playlist found for this emotion.';
+    }
+
+    musicPlayer.classList.add('show');
+    musicPlayer.scrollIntoView({ behavior: 'smooth' });
+}
+
+
+        function playSong(title, artist) {
+            // In a real implementation, this would integrate with Spotify API
+            alert(`🎵 Playing: "${title}" by ${artist}\n\nNote: In a production version, this would connect to Spotify API to play the actual song.`);
+        }
+
+        function resetSystem() {
+            // Reset all states
+            currentAudioBlob = null;
+            currentEmotion = null;
+            
+            // Hide all result sections
+            emotionResult.classList.remove('show');
+            therapyOptions.classList.remove('show');
+            musicPlayer.classList.remove('show');
+            audioPreview.classList.add('hidden');
+            
+            // Reset form elements
+            audioFileInput.value = '';
+            predictBtn.disabled = true;
+            
+            // Hide all status messages
+            document.querySelectorAll('.status').forEach(status => {
+                status.classList.add('hidden');
+            });
+            
+            // Reset recording state
+            startRecordBtn.disabled = false;
+            stopRecordBtn.disabled = true;
+            recordingIndicator.classList.remove('active');
+            
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+async function predictEmotion() {
+    if (!currentAudioBlob) {
+        showStatus('predictStatus', 'Please upload or record audio first', 'error');
+        return;
+    }
+
+    showStatus('predictStatus', 'Analyzing your voice...', 'info');
+    predictBtn.disabled = true;
+
+    const formData = new FormData();
+    formData.append('file', currentAudioBlob, 'audio.wav');
+
+    try {
+        const response = await fetch('http://localhost:5000/predict', {
+            method: 'POST',
+            body: formData
+        });
+
+        if (!response.ok) {
+            const text = await response.text();
+            console.error("Flask error response:", text);
+            throw new Error('Prediction failed. Check Flask server.');
+        }
+
+        const data = await response.json(); // e.g. { emotion: "angry" }
+        const emotion = data.emotion?.toLowerCase(); // normalize casing
+
+        if (!emotionData[emotion]) {
+            throw new Error(`Unsupported emotion: ${emotion}`);
+        }
+
+        currentEmotion = emotion;
+        displayEmotionResult(currentEmotion);
+        showStatus('predictStatus', 'Emotion detected successfully!', 'success');
+
+    } catch (error) {
+        console.error("Prediction error:", error);
+        showStatus('predictStatus', `Error: ${error.message}`, 'error');
+    }
+
+    predictBtn.disabled = false;
+}
+
+    </script>
+</body>
+</html>
