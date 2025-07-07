@@ -6,18 +6,27 @@ This project is a comprehensive pipeline for building a Speech Emotion Recogniti
 
 ## Table of Contents
 
-* [Overview](#overview)
-* [Datasets](#datasets)
-* [Preprocessing & Feature Engineering](#preprocessing--feature-engineering)
-* [Modeling](#modeling)
-
-  * [Trained Models](#trained-models)
-  * [Evaluation](#evaluation)
-* [Web Interface](#web-interface)
-* [Setup Instructions](#setup-instructions)
-* [Directory Structure](#directory-structure)
-* [Future Work](#future-work)
-* [License](#license)
+- [Speech Emotion Recognition System](#speech-emotion-recognition-system)
+  - [Table of Contents](#table-of-contents)
+  - [Overview](#overview)
+  - [Datasets](#datasets)
+  - [Preprocessing \& Feature Engineering](#preprocessing--feature-engineering)
+    - [Data Preparation](#data-preparation)
+    - [Features Extracted (Total: 74 features)](#features-extracted-total-74-features)
+  - [Modeling](#modeling)
+    - [Trained Models](#trained-models)
+    - [Evaluation](#evaluation)
+  - [Web Interface](#web-interface)
+    - [Endpoints](#endpoints)
+    - [How It Works](#how-it-works)
+  - [Setup Instructions](#setup-instructions)
+    - [1. Clone the Repository](#1-clone-the-repository)
+    - [2. Create a Virtual Environment](#2-create-a-virtual-environment)
+    - [3. Install Requirements](#3-install-requirements)
+    - [4. Run the Web App](#4-run-the-web-app)
+  - [Directory Structure](#directory-structure)
+  - [Future Work](#future-work)
+  - [License](#license)
 
 ---
 
@@ -134,9 +143,11 @@ cd ML
 
 ### 2. Create a Virtual Environment
 
+**Note:** Python `3.10` is required. Other versions may not work.
+
 ```bash
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
+python -m venv .venv
+source venv/bin/activate  # On Windows: .venv\Scripts\activate
 ```
 
 ### 3. Install Requirements
